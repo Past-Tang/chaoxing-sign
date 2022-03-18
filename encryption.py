@@ -1,6 +1,6 @@
 def encryption():
     while True:
-        username = input('输入用户名')
+        username = input('输入用户名:')
         serial = input('输入激活码:')
         username = list(username)
         for i in username:
