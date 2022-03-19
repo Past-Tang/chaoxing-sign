@@ -1,8 +1,8 @@
 '''
 Author: 过往 Past
-改 Author：Wildpointer
+修改：Wildpointer
 Date: 2022-02-22 21:12:32
-改 Date:2022-3-18 23:26
+修改Date：2022-3-18 23:26
 '''
 import datetime
 from asyncio.windows_events import NULL
@@ -14,18 +14,19 @@ import random
 from lxml import etree
 import getpass 
 import log
-import json
-itime="4"#基础延时
+import threading
+cancel_tml = False
+itime="5"#基础延时
 token=''#push+ token，选填
 classini=[]#课程信息
-#用户区结束
 headers = {'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 11; M2007J3SC Build/RKQ1.200826.002) (device:M2007J3SC) Language/zh_CN com.chaoxing.mobile/ChaoXingStudy_3_5.1.3_android_phone_613_74 '}#超星app原生ua
+name = input("账号:")#用户名，必填
+# 不回显
+passwd = getpass.getpass("密码：")#密码，必填
+# 时间以秒为单位
+runtime = 4000 # 总运行时间
+wait_time = 10 # 时间间隔
 #全局区结束
-# 读取关于二维码的json
-def read_json(path):
-    enc = 0
-    
-    return enc
 #第一个函数 实现登录，验证cookie，保存cookie，获取cookie各功能
 def login():#使用超星app登录api，测试多次获取没遇到过验证，比较稳定
     print("登录模块启动")
@@ -117,15 +118,15 @@ def get_active_one():#第五个函数 实现查询活动(核心)，这个超星a
                 print("监听到签到\n")
                 if o["nameOne"] == "签到码签到" or o["nameOne"]=="签到" or o["nameOne"]=="手势签到":
                     print("监听到:签到码签到或普通签到或手势签到\n")
-                    location_sign(o["nameOne"],o["id"])
+                    common_sign(o["nameOne"],o["id"])
                 elif o["nameOne"] == "位置签到":
                     print("监听到:位置签到\n")
-                    common_sign(o["nameOne"],o["id"])
+                    location_sign(o["nameOne"],o["id"])
                 elif o["nameOne"] == "二维码签到":
                     print("监听到:二维码签到\n")
                     enc = input("enc:")
                     Qrcode_sign(o["nameOne"],o["id"],enc)
-        time.sleep(random.randint(2,10))      
+        # time.sleep(random.randint(2,10))      
 def get_active_two():#备用网页端接口
         for i in classini:
             print("查询"+i[0]+"....")
@@ -145,8 +146,20 @@ def get_active_two():#备用网页端接口
                 go=i
                 go=go.replace('activeDetail(','')
                 go=go.replace(',2,null)','')
-                common_sign(go)
+                common_sign("备用接口签到",go)
                 time.sleep(random.randint(2,10))
+def start():
+    get_active_one()
+# 定时器
+# 程序运行一定时间自动结束
+def timer():
+    global time
+    if not cancel_tml:
+        # 每过itime的时间间隔运行一次main函数
+        start()
+        time = threading.Timer(wait_time,timer).start()
+def end():
+    exit(1)
 def main():
     if cookie_check()[0] ==True:
         print("cookie检测成功")
@@ -154,19 +167,11 @@ def main():
         okcookie=cookie_check()[1]
         global uid
         uid=cookie_check()[2]
-        while 1:
-            print("进入课程获取")
-            global classlist
-            classlist = get_class()
-            get_active_one()
-bit = encryption.encryption()
-if bit == 1:
-    global name
-    global passwd
-    name = input("账号:")#用户名，必填
-    # 不回显输入密码
-    passwd = getpass.getpass("密码：")#密码，必填
-    main()
-elif bit == -1:
-    exit(-1)
+        print("进入课程获取")
+        global classlist
+        classlist = get_class()
+        timer()
+        time.sleep(runtime)
+        cancel_tml == True
+main()
 
