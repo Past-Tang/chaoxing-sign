@@ -4,7 +4,6 @@ Author: 过往 Past
 Date: 2022-02-22 21:12:32
 改 Date:2022-3-18 23:26
 '''
-import encryption
 import datetime
 from asyncio.windows_events import NULL
 import requests
@@ -15,13 +14,18 @@ import random
 from lxml import etree
 import getpass 
 import log
+import json
 itime="4"#基础延时
 token=''#push+ token，选填
 classini=[]#课程信息
 #用户区结束
-#全局区开始
 headers = {'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 11; M2007J3SC Build/RKQ1.200826.002) (device:M2007J3SC) Language/zh_CN com.chaoxing.mobile/ChaoXingStudy_3_5.1.3_android_phone_613_74 '}#超星app原生ua
 #全局区结束
+# 读取关于二维码的json
+def read_json(path):
+    enc = 0
+    
+    return enc
 #第一个函数 实现登录，验证cookie，保存cookie，获取cookie各功能
 def login():#使用超星app登录api，测试多次获取没遇到过验证，比较稳定
     print("登录模块启动")
@@ -53,20 +57,20 @@ def cookie_check():
 #课程的选择：
 #1.  ‘-1’这个是跟目录下
 #2.  ‘目录参数’ 可以填写你的目录参数过滤掉其他的课程：浏览器f12即可
-def is_succeeded(response):
+def is_succeeded(name,response):
     if 'succ' in response.text:
-        print("\n\n"+"*"*5+"签到成功"+"*"*5+"\n\n")
+        print("\n\n"+"*"*5+str(name)+"签到成功"+"*"*5+"\n\n")
         cur = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') 
         # 输出结果到日志
-        log.log_write(cur+'----'+"签到成功"+'----'+'\n')
+        log.log_write(cur+'----'+str(name)+"签到成功"+'----'+'\n')
         if token ==NULL:
             return
         response = requests.get("https://www.pushplus.plus/send?token="+token+"&title="+str(random.randint(0,100))+"您的学习通&content=成功签到")
         print(response.text)
     else:
-        print("\n\n"+"*"*5+"签到失败"+"*"*5+"\n\n")
+        print("\n\n"+"*"*5+str(name)+"签到失败"+"*"*5+"\n\n")
         cur = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') 
-        log.log_write(cur+'----'+"签到失败"+'----'+'\n')
+        log.log_write(cur+'----'+str(name)+"签到失败"+'----'+'\n')
     return
 def get_class():
     r = requests.get('https://mooc1-api.chaoxing.com/mycourse/backclazzdata?view=json&mcode=', headers=headers, cookies= okcookie)
@@ -78,16 +82,16 @@ def get_class():
             classini.append([i['content']['course']['data'][0]['name'],i['content']['course']['data'][0]['id'],i['key']])
     print("\n\n"+"*"*5+"课程获取成功"+"*"*5+"\n\n")
     return classinfo
-def common_sign(id):#第四个函数，发出签到请求，推送push+
+def common_sign(name,id):#第四个函数，发出签到请求，推送push+
     response = requests.get('https://mobilelearn.chaoxing.com/pptSign/stuSignajax?activeId='+str(id)+'&uid='+uid, headers=headers,cookies= okcookie)
-    is_succeeded(response)
-def location_sign(id):
+    is_succeeded(name,response)
+def location_sign(name,id):
     response = requests.get('https://mobilelearn.chaoxing.com/pptSign/stuSignajax?activeId='+str(id)+'&uid='+uid, headers=headers,cookies= okcookie)
-    is_succeeded(response)
+    is_succeeded(name,response)
     return 0
-def Qrcode_sign(id):
-    response = requests.get('https://mobilelearn.chaoxing.com/pptSign/stuSignajax?activeId='+str(id)+'&uid='+uid+'&enc=', headers=headers,cookies= okcookie)
-    is_succeeded(response)
+def Qrcode_sign(name,id,enc):
+    response = requests.get('https://mobilelearn.chaoxing.com/pptSign/stuSignajax?activeId='+str(id)+'&uid='+uid+'&enc='+enc, headers=headers,cookies= okcookie)
+    is_succeeded(name,response)
     return 0
 def get_active_one():#第五个函数 实现查询活动(核心)，这个超星api有访问次数限制，这里用网页版和app版的活动获取两种api，交替并演示使用
     for i in classini:
@@ -113,13 +117,14 @@ def get_active_one():#第五个函数 实现查询活动(核心)，这个超星a
                 print("监听到签到\n")
                 if o["nameOne"] == "签到码签到" or o["nameOne"]=="签到" or o["nameOne"]=="手势签到":
                     print("监听到:签到码签到或普通签到或手势签到\n")
-                    location_sign(o["id"])
+                    location_sign(o["nameOne"],o["id"])
                 elif o["nameOne"] == "位置签到":
                     print("监听到:位置签到\n")
-                    common_sign(o["id"])
+                    common_sign(o["nameOne"],o["id"])
                 elif o["nameOne"] == "二维码签到":
                     print("监听到:二维码签到\n")
-                    Qrcode_sign(o["id"])
+                    enc = input("enc:")
+                    Qrcode_sign(o["nameOne"],o["id"],enc)
         time.sleep(random.randint(2,10))      
 def get_active_two():#备用网页端接口
         for i in classini:
@@ -164,7 +169,4 @@ if bit == 1:
     main()
 elif bit == -1:
     exit(-1)
-# 一。https://mobilelearn.chaoxing.com/widget/sign/pcTeaSignController/endSign?activeId=4000016512062&classId=53789806&fid=18078&courseId=223932923&isTeacherViewOpen=1
-# 二维码签到，二维码页面的url
-# https://mobilelearn.chaoxing.com/widget/sign/pcTeaSignController/endSign?activeId=+str(id)+'&classId'=+''+'fid='+''+'&courseId'=''+'&isTeacherViewOpen=1'
-# 二。https://mobilelearn.chaoxing.com/page/sign/endSign?courseId=223932923&classId=53789806&activeId=4000016514053&fid=0&cpi=154183194&showOnScreenShare=true
+
