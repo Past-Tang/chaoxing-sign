@@ -1,36 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 240" fill="none">
-  <rect width="680" height="240" rx="16" fill="#0d1117"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 200" fill="none">
+  <rect width="680" height="200" rx="16" fill="#0d1117"/>
   <defs>
-    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#161b22" stroke-width="1"/>
+    <pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0L0 0 0 40" fill="none" stroke="#161b22" stroke-width="1"/>
     </pattern>
   </defs>
-  <rect width="680" height="240" fill="url(#grid)"/>
-  
-  <!-- Checkmark icon -->
-  <g transform="translate(60, 45)">
-    <circle cx="60" cy="60" r="55" fill="#1a2332" stroke="#58a6ff" stroke-width="2.5"/>
+  <rect width="680" height="200" fill="url(#g)"/>
+  <!-- Icon -->
+  <g transform="translate(40,40)">
+    <rect width="120" height="120" rx="16" fill="#1a2332" stroke="#58a6ff" stroke-width="2.5"/>
     <path d="M35 62 L52 80 L85 42" stroke="#58a6ff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-    <!-- Clock hands (auto) -->
     <circle cx="60" cy="60" r="3" fill="#58a6ff" opacity="0.4"/>
-    <line x1="60" y1="60" x2="60" y2="35" stroke="#58a6ff" stroke-width="1.5" opacity="0.3"/>
+    <line x1="60" y1="60" x2="60" y2="38" stroke="#58a6ff" stroke-width="1.5" opacity="0.3"/>
     <line x1="60" y1="60" x2="78" y2="52" stroke="#58a6ff" stroke-width="1.5" opacity="0.3"/>
   </g>
-  
-  <!-- Title -->
-  <text x="210" y="85" font-family="'Segoe UI', system-ui, sans-serif" font-size="48" fill="#e6edf3" font-weight="700" letter-spacing="-1">Chaoxing</text>
-  <text x="210" y="135" font-family="'Segoe UI', system-ui, sans-serif" font-size="48" fill="#58a6ff" font-weight="700" letter-spacing="-1">Auto-Sign</text>
-  
-  <!-- Subtitle -->
-  <text x="212" y="168" font-family="'Segoe UI', system-ui, sans-serif" font-size="15" fill="#7d8590">学习通自动签到 | 双接口 | 微信推送</text>
-  
+  <!-- Text -->
+  <text x="195" y="72" font-family="'Segoe UI',system-ui,sans-serif" font-size="46" fill="#e6edf3" font-weight="700" letter-spacing="-1">Chaoxing</text>
+  <text x="195" y="118" font-family="'Segoe UI',system-ui,sans-serif" font-size="46" fill="#58a6ff" font-weight="700" letter-spacing="-1">Auto-Sign</text>
+  <text x="197" y="148" font-family="'Segoe UI',system-ui,sans-serif" font-size="14" fill="#7d8590">学习通自动签到 | 双接口 | 微信推送</text>
   <!-- Tags -->
-  <g transform="translate(212, 185)">
-    <rect x="0" y="0" width="72" height="22" rx="11" fill="#1a2332" stroke="#58a6ff" stroke-width="1"/>
-    <text x="36" y="15" font-family="monospace" font-size="10" fill="#58a6ff" text-anchor="middle">Python</text>
-    <rect x="82" y="0" width="80" height="22" rx="11" fill="#1a2332" stroke="#f0883e" stroke-width="1"/>
-    <text x="122" y="15" font-family="monospace" font-size="10" fill="#f0883e" text-anchor="middle">Requests</text>
-    <rect x="172" y="0" width="80" height="22" rx="11" fill="#1a2332" stroke="#3fb950" stroke-width="1"/>
-    <text x="212" y="15" font-family="monospace" font-size="10" fill="#3fb950" text-anchor="middle">PushPlus</text>
+  <g transform="translate(197,162)">
+    <rect width="66" height="22" rx="11" fill="#1a2332" stroke="#58a6ff" stroke-width="1"/>
+    <text x="33" y="15" font-family="monospace" font-size="10" fill="#58a6ff" text-anchor="middle">Python</text>
+    <rect x="76" width="78" height="22" rx="11" fill="#1a2332" stroke="#f0883e" stroke-width="1"/>
+    <text x="115" y="15" font-family="monospace" font-size="10" fill="#f0883e" text-anchor="middle">Requests</text>
+    <rect x="164" width="78" height="22" rx="11" fill="#1a2332" stroke="#3fb950" stroke-width="1"/>
+    <text x="203" y="15" font-family="monospace" font-size="10" fill="#3fb950" text-anchor="middle">PushPlus</text>
   </g>
 </svg>
